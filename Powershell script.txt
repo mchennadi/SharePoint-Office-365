@@ -1,0 +1,55 @@
+
+=====================Connect to SharePoint==============================================
+#https://imgx-admin.sharepoint.com
+$adminUPN="manasa.chennadi@imglobal.com"
+$orgName="imgx"
+$userCredential = Get-Credential -UserName $adminUPN -Message "Wintertime2017"
+Connect-SPOService -Url https://$orgName-admin.sharepoint.com -Credential $userCredential
+=====================================================================================
+=========================Update logo ==================================================
+$sitelogo="/SiteAssets/IMG%20Logo%20190px.png"
+$Site="https://imgx.sharepoint.com/"
+$Sites=Get-SPWebApplication $Site|Get-SPSite -LimitAll|Get-SPWeb -LimitAll|Select URL
+$Sites|ForEach-Object {
+$CurrentSite=$_.URL
+$CurrentSiteObject=new-object Microsoft.SharePoint.SPSite($CurrentSite)
+foreach($web in $CurrentSiteObject.Allwebs) {
+$web.SiteLogoUrl=$sitelogo
+$web.Update()}
+$CurrentSiteObject.Dispose()}
+
+https://imgx.sharepoint.com/_layouts/15/images/SharePointFoundation16.png?rev=44
+=====================================================================================
+
+Add-PSSnapin "Microsoft.SharePoint.PowerShell" -ErrorAction SilentlyContinue
+$sitelogo="/SiteAssets/IMG%20Logo%20190px.png"
+$Site="https://imgx.sharepoint.com/EPMO/AmeriCorpsVistaWorksite/"
+foreach($web in $Site.Allwebs) {
+$web.SiteLogoUrl=$sitelogo
+$web.Update()}
+
+
+====================================================================================
+Connect-SPOService –url https://imgx.sharepoint.com/EPMO
+$sites = Get-SPOSite -Detailed
+foreach ($site in $sites)
+{
+    Write-Host $site.Title
+    $siteGroups = Get-SPOSiteGroup -Site $site.Url
+    foreach ($group in $siteGroups)
+        {
+              $users = Get-SPOUser -Site $site.Url  -Group $group.Title -Limit All |ft -wrap 
+              $url = $site.Url
+              $groupName = $group.Title
+              Write-Host $groupName + ' ' + $group.Users
+          }
+} 
+
+$sites = Get-SPOSite -Detailed
+foreach ($site in $sites)
+{
+    Write-Host $site.Title
+	}
+	
+	
+	C:\IMG_Manasa\Projects\SharePoint\PowerShellScript_SPO.ps1
